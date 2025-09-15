@@ -1,0 +1,116 @@
+<!doctype html>
+<canvas id="timeslice"></canvas>
+<style>
+    body {
+        background-color: black;
+        margin: auto;
+        height: 100%;
+        overflow: hidden;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+</style>
+<script>
+    const canvas = document.getElementById("timeslice");
+    const ctx = canvas.getContext("2d");
+
+    const size = 200;
+    canvas.style.width = `${size}px`;
+    canvas.style.height = `${size}px`;
+
+    const scale = window.devicePixelRatio;
+    canvas.width = Math.floor(size * scale);
+    canvas.height = Math.floor(size * scale);
+    const millisPerDay = 24 * 60 * 60 * 1000;
+    ctx.scale(scale, scale);
+    var k = 1;
+    const drawHand = (label, millisOfDay, part) => {
+        const fraction = (millisOfDay % part) / part;
+        const radius =
+            90 * (Math.log(1 + (k * part) / millisPerDay) / Math.log(1 + k));
+        if (radius < 5) return;
+        const blueTint = Math.min(50, Math.floor((radius / 90) * 50));
+
+        ctx.save();
+        const angle = 1.5 * Math.PI + Math.PI * 2 * fraction;
+        const x = 100 + radius * Math.cos(angle);
+        const y = 100 + radius * Math.sin(angle);
+        ctx.translate(x, y);
+        // Draw the small circle at the edge
+        ctx.beginPath();
+        // ctx.arc(0, 0, 2, 0, 2 * Math.PI);
+        ctx.fillStyle = `rgba(${255 - blueTint}, ${255 - blueTint}, 255, 0.8)`;
+        ctx.fill();
+
+        // Restore context to draw the arc
+        ctx.restore();
+
+        // Draw a subtle arc
+        ctx.beginPath();
+        ctx.arc(
+            100,
+            100,
+            radius,
+            1.5 * Math.PI,
+            1.5 * Math.PI + Math.PI * 2 * fraction,
+        );
+        ctx.strokeStyle = `rgba(${255 - blueTint}, ${255 - blueTint}, 255, 0.2)`;
+        ctx.lineWidth = radius / 20;
+        ctx.stroke();
+        // ctx.save();
+        // ctx.translate(radius, 0);
+        // ctx.rotate(1.5 * Math.PI + Math.PI * 2 * fraction);
+        // ctx.arc(0, 0, 10, 0, 2 * Math.PI);
+        //const blueTint = Math.min(50, Math.floor((radius / 90) * 50));
+        ctx.fillStyle = `rgba(${255 - blueTint}, ${255 - blueTint}, 255, 0.8)`;
+        ctx.stroke();
+        ctx.restore();
+        // ctx.restore();
+        ctx.font = "bold 4px sans";
+        ctx.fillStyle = "white";
+        ctx.textAlign = "right";
+        ctx.fillText(label, 98, 100 - radius);
+    };
+    const frame = () => {
+        const now = new Date();
+        const millisOfDay =
+            now.getHours() * 60 * 60 * 1000 +
+            now.getMinutes() * 60 * 1000 +
+            now.getSeconds() * 1000 +
+            now.getMilliseconds();
+        ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+        ctx.fillRect(0, 0, 200, 200);
+        drawHand("1 d", millisOfDay, 24 * 60 * 60 * 1000);
+        drawHand("12 h", millisOfDay, 12 * 60 * 60 * 1000);
+        drawHand("8 h", millisOfDay, 8 * 60 * 60 * 1000);
+        drawHand("6 h", millisOfDay, 6 * 60 * 60 * 1000);
+        drawHand("4 h", millisOfDay, 4 * 60 * 60 * 1000);
+        drawHand("2 h", millisOfDay, 2 * 60 * 60 * 1000);
+        drawHand("1 h", millisOfDay, 60 * 60 * 1000);
+        drawHand("45 m", millisOfDay, 45 * 60 * 1000);
+        drawHand("30 m", millisOfDay, 30 * 60 * 1000);
+        drawHand("20 m", millisOfDay, 20 * 60 * 1000);
+        drawHand("15 m", millisOfDay, 15 * 60 * 1000);
+        drawHand("10 m", millisOfDay, 10 * 60 * 1000);
+        drawHand("5 m", millisOfDay, 5 * 60 * 1000);
+        drawHand("2 m", millisOfDay, 2 * 60 * 1000);
+        drawHand("1 m", millisOfDay, 60 * 1000);
+        drawHand("30 s", millisOfDay, 30 * 1000);
+        drawHand("10 s", millisOfDay, 10 * 1000);
+        drawHand("5 s", millisOfDay, 5 * 1000);
+        drawHand("1 s", millisOfDay, 1000);
+        drawHand("1 s", millisOfDay, 1000);
+        drawHand("100 ms", millisOfDay, 100);
+        drawHand("10 ms", millisOfDay, 10);
+        drawHand("1 ms", millisOfDay, 1);
+        window.requestAnimationFrame(frame);
+    };
+    window.addEventListener("wheel", (e) => {
+        k += k * (e.deltaY / 500.0);
+        console.log(k);
+    });
+    frame();
+</script>
