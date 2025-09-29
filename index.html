@@ -52,16 +52,11 @@
         const x = 100 + radius * Math.cos(angle);
         const y = 100 + radius * Math.sin(angle);
         ctx.translate(x, y);
-        // Draw the small circle at the edge
         ctx.beginPath();
-        // ctx.arc(0, 0, 2, 0, 2 * Math.PI);
-        ctx.fillStyle = `rgba(${255 - blueTint}, ${255 - blueTint}, 255, 0.8)`;
+        ctx.fillStyle = "red";
         ctx.fill();
-
-        // Restore context to draw the arc
         ctx.restore();
 
-        // Draw a subtle arc
         ctx.beginPath();
         ctx.arc(
             100,
@@ -72,20 +67,14 @@
         );
         ctx.strokeStyle = `rgba(${255 - blueTint}, ${255 - blueTint}, 255, 0.2)`;
         ctx.lineWidth = radius / 20;
-        ctx.stroke();
-        // ctx.save();
-        // ctx.translate(radius, 0);
-        // ctx.rotate(1.5 * Math.PI + Math.PI * 2 * fraction);
-        // ctx.arc(0, 0, 10, 0, 2 * Math.PI);
-        //const blueTint = Math.min(50, Math.floor((radius / 90) * 50));
-        ctx.fillStyle = `rgba(${255 - blueTint}, ${255 - blueTint}, 255, 0.8)`;
-        ctx.stroke();
+        ctx.lineTo(100, 100);
+        ctx.fillStyle = `rgba(${255 - 255 * (radius / 100)}, 0,0,0.8)`;
+        ctx.fill();
         ctx.restore();
-        // ctx.restore();
         ctx.font = "bold 4px sans";
         ctx.fillStyle = "white";
         ctx.textAlign = "right";
-        ctx.fillText(label, 98, 100 - radius);
+        // ctx.fillText(label, 98, 100 - radius);
     };
     const frame = () => {
         const now = new Date();
@@ -97,6 +86,7 @@
         ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
         ctx.fillRect(0, 0, 200, 200);
         drawHand("1 d", millisOfDay, 24 * 60 * 60 * 1000);
+        drawHand("18 h", millisOfDay, 18 * 60 * 60 * 1000);
         drawHand("12 h", millisOfDay, 12 * 60 * 60 * 1000);
         drawHand("8 h", millisOfDay, 8 * 60 * 60 * 1000);
         drawHand("6 h", millisOfDay, 6 * 60 * 60 * 1000);
@@ -123,7 +113,6 @@
     };
     window.addEventListener("wheel", (e) => {
         k += k * (e.deltaY / 500.0);
-        console.log(k);
     });
     frame();
 </script>
