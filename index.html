@@ -1,31 +1,37 @@
 <!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <canvas id="timeslice"></canvas>
 <style>
     body {
         background-color: black;
-        margin: auto;
+        margin: 0;
+        padding: 0;
         height: 100%;
         overflow: hidden;
-
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
+    }
+    canvas {
+        width: 100%;
+        height: 100%;
+        background-color: black;
     }
 </style>
 <script>
     const canvas = document.getElementById("timeslice");
+
     const ctx = canvas.getContext("2d");
-
+    ctx.globalCompositeOperation = "destination-atop";
     const size = 200;
-    canvas.style.width = `${size}px`;
-    canvas.style.height = `${size}px`;
+    const resize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const scale = Math.min(window.innerWidth, window.innerHeight) / size;
+        ctx.scale(scale, scale);
+    };
+    window.addEventListener("resize", resize);
+    resize();
 
-    const scale = window.devicePixelRatio;
-    canvas.width = Math.floor(size * scale);
-    canvas.height = Math.floor(size * scale);
     const millisPerDay = 24 * 60 * 60 * 1000;
-    ctx.scale(scale, scale);
+    // scale so 0.0
     var k = 1;
     const drawHand = (label, millisOfDay, part) => {
         const fraction = (millisOfDay % part) / part;
