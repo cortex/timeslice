@@ -33,12 +33,19 @@
     const millisPerDay = 24 * 60 * 60 * 1000;
     // scale so 0.0
     var k = 1;
+    let prevRadius = 0;
     const drawHand = (label, millisOfDay, part) => {
         const fraction = (millisOfDay % part) / part;
         const radius =
             90 * (Math.log(1 + (k * part) / millisPerDay) / Math.log(1 + k));
         if (radius < 5) return;
-        const blueTint = Math.min(50, Math.floor((radius / 90) * 50));
+        radiusDelta = prevRadius - radius;
+        // console.log(radiusDelta);
+        if (Math.abs(radiusDelta) < 6) {
+            return;
+        }
+        prevRadius = radius;
+        const blueTint = Math.min(40, Math.floor((radius / 90) * 30));
 
         ctx.save();
         const angle = 1.5 * Math.PI + Math.PI * 2 * fraction;
