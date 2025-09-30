@@ -17,15 +17,19 @@
 </style>
 <script>
     const canvas = document.getElementById("timeslice");
-
     const ctx = canvas.getContext("2d");
-    ctx.globalCompositeOperation = "destination-atop";
+    // ctx.globalCompositeOperation = "destination-atop";
+    // Render output is 200x200, with 0.0 in center
     const size = 200;
     const resize = () => {
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         const scale = Math.min(window.innerWidth, window.innerHeight) / size;
         ctx.scale(scale, scale);
+        ctx.translate(
+            (window.innerWidth / scale - size) / 2,
+            (window.innerHeight / scale - size) / 2,
+        );
     };
     window.addEventListener("resize", resize);
     resize();
