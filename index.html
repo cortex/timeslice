@@ -38,6 +38,7 @@
     // scale so 0.0
     var k = 1;
     let prevRadius = 0;
+    let drawText = false;
     const drawHand = (label, millisOfDay, part) => {
         const fraction = (millisOfDay % part) / part;
         const radius =
@@ -78,7 +79,9 @@
         ctx.font = "bold 4px sans";
         ctx.fillStyle = "white";
         ctx.textAlign = "right";
-        // ctx.fillText(label, 98, 100 - radius);
+        if (drawText) {
+            ctx.fillText(label, 98, 100 - radius);
+        }
     };
     const frame = () => {
         const now = new Date();
@@ -103,12 +106,11 @@
         drawHand("15 m", millisOfDay, 15 * 60 * 1000);
         drawHand("10 m", millisOfDay, 10 * 60 * 1000);
         drawHand("5 m", millisOfDay, 5 * 60 * 1000);
-        drawHand("2 m", millisOfDay, 2 * 60 * 1000);
+        // drawHand("2 m", millisOfDay, 2 * 60 * 1000);
         drawHand("1 m", millisOfDay, 60 * 1000);
         drawHand("30 s", millisOfDay, 30 * 1000);
         drawHand("10 s", millisOfDay, 10 * 1000);
         drawHand("5 s", millisOfDay, 5 * 1000);
-        drawHand("1 s", millisOfDay, 1000);
         drawHand("1 s", millisOfDay, 1000);
         drawHand("100 ms", millisOfDay, 100);
         drawHand("10 ms", millisOfDay, 10);
@@ -117,6 +119,12 @@
     };
     window.addEventListener("wheel", (e) => {
         k += k * (e.deltaY / 500.0);
+    });
+    window.addEventListener("keyup", (e) => {
+        console.log(e.key);
+        if (e.key === " ") {
+            drawText = !drawText;
+        }
     });
     frame();
 </script>
